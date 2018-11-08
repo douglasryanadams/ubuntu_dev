@@ -1,0 +1,8 @@
+- name: Install Language Packages
+  apt:
+    name:
+      - openjdk-8-jdk
+      - python
+      - python3
+      - nodejs
+      - npm

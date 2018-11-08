@@ -1,0 +1,47 @@
+- name: Set up SSH Keys
+  user:
+    name: rook
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+
+- name: Create ~/git Directory
+  file:
+    state: directory
+    path: /home/rook/git
+    owner: rook
+    group: rook
+
+- name: Checkout Profile from Github
+  git:
+    repo: https://github.com/douglasryanadams/config.git
+    dest: /home/rook/git/config
+
+- name: Set ownership of ~/git/config
+  file:
+    path: /home/rook/git/config
+    owner: rook
+    group: rook
+    recurse: true
+
+- name: Symlink Profile into Home Directory
+  file:
+    state: link
+    src: /home/rook/git/config/{{ item }}
+    dest: /home/rook/{{ item }}
+    owner: rook
+    group: rook
+    force: true
+  with_items:
+    - .profile
+    - .gitconfig
+    - .gitignore
+
+- name: Run script to send ad servers to 0.0.0.0
+  script: /home/rook/git/config/scripts/hosts.py
+  args:
+    creates: /tmp/hosts_updated.lock
+
+- name: 
+  file:
+    path: /tmp/hosts_updated.lock
+
