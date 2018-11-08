@@ -11,3 +11,4 @@ sudo apt -y install git vim ansible
 
 ansible-playbook desktop.yml -K
 
+echo "Install /home/rook/.ssh/id_rsa.pub on Github"
