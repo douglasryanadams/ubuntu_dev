@@ -1,3 +1,13 @@
+- name: Remove unwanted default applications
+  become: yes
+  apt:
+    autoclean: yes
+    autoremove: yes
+    state: absent
+    name:
+      - unity-webapps-common
+      - rhythmbox
+
 - name: Set up SSH Keys
   user:
     name: rook
@@ -7,18 +17,22 @@
 - name: Create ~/git Directory
   file:
     state: directory
-    path: /home/rook/git
+    path: ~/{{ item }}
     owner: rook
     group: rook
+  with_items:
+    - git
+    - lock
 
 - name: Checkout Profile from Github
   git:
     repo: https://github.com/douglasryanadams/config.git
-    dest: /home/rook/git/config
+    dest: ~/git/config
+    update: no
 
 - name: Set ownership of ~/git/config
   file:
-    path: /home/rook/git/config
+    path: ~/git/config
     owner: rook
     group: rook
     recurse: true
@@ -26,8 +40,8 @@
 - name: Symlink Profile into Home Directory
   file:
     state: link
-    src: /home/rook/git/config/{{ item }}
-    dest: /home/rook/{{ item }}
+    src: ~/git/config/{{ item }}
+    dest: ~/{{ item }}
     owner: rook
     group: rook
     force: true
@@ -37,11 +51,13 @@
     - .gitignore
 
 - name: Run script to send ad servers to 0.0.0.0
-  script: /home/rook/git/config/scripts/hosts.py
+  script: ~/git/config/scripts/hosts.py
+  become: yes
   args:
     creates: /tmp/hosts_updated.lock
 
-- name: 
+- name: Create file to prevent hosts script from running again
   file:
     path: /tmp/hosts_updated.lock
+    state: touch
 

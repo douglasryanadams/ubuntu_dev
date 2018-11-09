@@ -1,0 +1,18 @@
+- name: Download IntelliJ
+  command: 'xdg-open https://www.jetbrains.com/idea/download/download-thanks.html?platform=linuxWithoutJDK'
+  args:
+    creates: /home/rook/lock/intellij_installer.lock
+
+- name: Create file so we don't open the IntelliJ download link again
+  file:
+    path: /home/rook/lock/intellij_installer.lock
+    state: touch
+
+- name: Symlink IntelliJ Desktop to /usr/local/bin
+  become: yes
+  file:
+    src: /home/rook/Desktop/idea-*/bin/idea.sh
+    dest: /usr/local/bin/idea
+    state: link
+    force: true
+

@@ -26,10 +26,3 @@ Plans
 
 - Write a Vagrant file to make this even more portable
 
-TODO
-----
-
-- Install IntelliJ
-- Install and set up Python virtualenv for Python 2 and 3
-- Remove bloatware
-
