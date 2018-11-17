@@ -8,11 +8,10 @@
     path: /home/rook/lock/intellij_installer.lock
     state: touch
 
-- name: Symlink IntelliJ Desktop to /usr/local/bin
+- name: Install NPM Tools
   become: yes
-  file:
-    src: /home/rook/Desktop/idea-*/bin/idea.sh
-    dest: /usr/local/bin/idea
-    state: link
-    force: true
-
+  npm:
+    name: '{{ item }}'
+    global: yes
+  with_items: 
+      - '@vue/cli'
