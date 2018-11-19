@@ -8,6 +8,13 @@
       - unity-webapps-common
       - rhythmbox
 
+- name: Install useful utils
+  become: yes
+  apt:
+    name:
+      - htop 
+      - iftop 
+
 - name: Set up SSH Keys
   user:
     name: rook
