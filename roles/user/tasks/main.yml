@@ -14,6 +14,7 @@
     name:
       - htop 
       - iftop 
+      - python-psutil # Used by dconf ansible module
 
 - name: Set up SSH Keys
   user:
@@ -68,3 +69,39 @@
     path: /tmp/hosts_updated.lock
     state: touch
 
+#- name: Read terminal Profile ID
+#  dconf:
+#    key: "/org/gnome/terminal/legacy/profiles:"
+#    state: list # This is not supported yet by this module
+#  register: profile_id
+
+- name: Read terminal Profile ID
+  command: 'dconf list /org/gnome/terminal/legacy/profiles:/'
+  register: profile_list
+
+- debug:
+    var: profile_list
+
+- set_fact:
+    profile_id: "{{ profile_list.stdout_lines[0] }}"
+
+- debug:
+    var: profile_id
+
+- name: Set disable theme colors 
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/{{ profile_id }}use-theme-colors"
+    state: present
+    value: 'false'
+    
+- name: Set background color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/{{ profile_id }}background-color"
+    state: present
+    value: "'rgb(0,0,0)'"
+
+- name: Set foreground color
+  dconf:
+    key: "/org/gnome/terminal/legacy/profiles:/{{ profile_id }}foreground-color"
+    state: present
+    value: "'rgb(170,170,170)'"
