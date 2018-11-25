@@ -1,3 +1,9 @@
+- name: Install packages required by dev tools
+  become: yes
+  apt:
+    name:
+      - python-apt
+
 - name: Download IntelliJ
   command: 'xdg-open https://www.jetbrains.com/idea/download/download-thanks.html?platform=linuxWithoutJDK'
   args:
@@ -15,3 +21,14 @@
     global: yes
   with_items: 
       - '@vue/cli'
+
+- name: Add PPA for Atom text editor
+  become: yes
+  apt_repository:
+    repo: ppa:webupd8team/atom
+    codename: xenial
+
+- name: Install Atom text editor from PPA
+  become: yes
+  apt:
+    name: atom

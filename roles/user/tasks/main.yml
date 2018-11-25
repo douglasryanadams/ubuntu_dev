@@ -79,14 +79,8 @@
   command: 'dconf list /org/gnome/terminal/legacy/profiles:/'
   register: profile_list
 
-- debug:
-    var: profile_list
-
 - set_fact:
     profile_id: "{{ profile_list.stdout_lines[0] }}"
-
-- debug:
-    var: profile_id
 
 - name: Set disable theme colors 
   dconf:
