@@ -3,6 +3,8 @@
   apt:
     name:
       - python-apt
+      - python3-apt
+      - python3-pip
       - apt-transport-https # Docker
       - ca-certificates # Docker
       - curl # Docker
@@ -60,3 +62,8 @@
       - docker-ce-cli
       - containerd.io
 
+- name: Install Docker Compose
+  become: yes
+  pip:
+    executable: pip3
+    name: docker-compose
