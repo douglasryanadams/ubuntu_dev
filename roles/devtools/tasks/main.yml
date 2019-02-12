@@ -3,6 +3,11 @@
   apt:
     name:
       - python-apt
+      - apt-transport-https # Docker
+      - ca-certificates # Docker
+      - curl # Docker
+      - gnupg-agent # Docker
+      - software-properties-common # Docker
 
 - name: Download IntelliJ
   command: 'xdg-open https://www.jetbrains.com/idea/download/download-thanks.html?platform=linuxWithoutJDK'
@@ -26,9 +31,32 @@
   become: yes
   apt_repository:
     repo: ppa:webupd8team/atom
-    codename: xenial
+    codename: bionic
 
 - name: Install Atom text editor from PPA
   become: yes
   apt:
     name: atom
+
+- name: Add GPG Key for Docker 
+  become: yes
+  apt_key:
+    id: 0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Repo for Docker CE
+  become: yes
+  apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable'
+    state: present
+
+- name: Apt install Docker CE
+  become: yes
+  apt:
+    update_cache: yes
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
