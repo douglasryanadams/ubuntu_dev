@@ -10,6 +10,7 @@
       - curl # Docker
       - gnupg-agent # Docker
       - software-properties-common # Docker
+      - postgresql-client
 
 - name: Download IntelliJ
   command: 'xdg-open https://www.jetbrains.com/idea/download/download-thanks.html?platform=linuxWithoutJDK'
